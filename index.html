@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>לומדים</title>
+<meta name="theme-color" content="#1f3a5f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="לומדים">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<style>
+:root{
+  --bg:#f6f4ef; --card:#ffffff; --ink:#1d232b; --muted:#5d6672; --line:#e3ded4;
+  --accent:#1f3a5f; --accent-ink:#ffffff; --ok:#1f7a4d; --ok-bg:#e6f4ec; --bad:#b4372f; --bad-bg:#fbeceb;
+  --empty:#ece8df;
+  --n-axillary:#c0392b; --n-radial:#d9822b; --n-musculocutaneous:#2e8b57; --n-median:#2f6db5; --n-ulnar:#7d4fc4;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#14171c; --card:#1d2229; --ink:#e9edf2; --muted:#9aa4b1; --line:#2f3640;
+    --accent:#8fb4e3; --accent-ink:#10161e; --ok:#6fd39c; --ok-bg:#183326; --bad:#f08a80; --bad-bg:#3a1e1c;
+    --empty:#262c34;
+    --n-axillary:#e0675a; --n-radial:#eda25a; --n-musculocutaneous:#5cbf86; --n-median:#6aa1e6; --n-ulnar:#a98ae6;
+  }
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink)}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;font-size:18px;line-height:1.55;
+  padding:max(12px,env(safe-area-inset-top)) 16px max(24px,env(safe-area-inset-bottom));-webkit-text-size-adjust:100%}
+.wrap{max-width:560px;margin:0 auto}
+h1{font-size:24px;margin:8px 0 4px} h2{font-size:20px;margin:18px 0 8px}
+.sub{color:var(--muted);font-size:15px;margin:0 0 14px}
+button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin:12px 0}
+.unit-row{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;text-align:right;border:1px solid var(--line);
+  background:var(--card);border-radius:14px;padding:14px;margin:8px 0}
+.unit-row small{display:block;color:var(--muted);font-size:14px}
+.pill{font-size:13px;border-radius:99px;padding:3px 10px;background:var(--empty);color:var(--muted);white-space:nowrap}
+.pill.done{background:var(--ok-bg);color:var(--ok)} .pill.mid{background:#fff3dc;color:#8a5a00}
+@media (prefers-color-scheme: dark){.pill.mid{background:#3a2f17;color:#f0c46a}}
+.top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px}
+.back{border:none;background:none;color:var(--accent);font-size:16px;padding:6px 0}
+.bar{height:6px;background:var(--empty);border-radius:99px;overflow:hidden;margin:4px 0 12px}
+.bar>i{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .3s}
+.step-text p{margin:0 0 10px}
+.q{font-weight:650;margin:14px 0 10px}
+.opt{display:block;width:100%;text-align:right;border:1.5px solid var(--line);background:var(--card);border-radius:12px;padding:12px 14px;margin:8px 0}
+.opt.ok{border-color:var(--ok);background:var(--ok-bg)} .opt.bad{border-color:var(--bad);background:var(--bad-bg)}
+.opt:disabled{cursor:default;opacity:1}
+.fb{border-radius:12px;padding:12px 14px;margin:10px 0;font-size:17px}
+.fb.ok{background:var(--ok-bg)} .fb.bad{background:var(--bad-bg)} .fb.neutral{background:var(--empty)}
+.fb p{margin:0 0 8px} .fb p:last-child{margin:0}
+.primary{display:block;width:100%;border:none;border-radius:14px;background:var(--accent);color:var(--accent-ink);padding:14px;font-weight:650;margin-top:14px}
+.ghost{display:block;width:100%;border:1px solid var(--line);border-radius:14px;background:none;padding:12px;margin-top:10px;color:var(--muted)}
+textarea{width:100%;min-height:110px;font:inherit;font-size:17px;border:1.5px solid var(--line);border-radius:12px;padding:10px;background:var(--card);color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0}
+.chip{border:1.5px solid var(--line);background:var(--card);border-radius:99px;padding:7px 12px;font-size:15px}
+.chip.ok{border-color:var(--ok);background:var(--ok-bg)} .chip.bad{border-color:var(--bad);background:var(--bad-bg)}
+.sort-item{border-top:1px solid var(--line);padding:12px 0}
+.sort-item:first-child{border-top:none}
+.sort-item .t{font-weight:600;margin-bottom:6px}
+/* the limb diagram */
+.dia{display:grid;grid-template-columns:64px 1fr 1fr;gap:6px;font-size:13px;line-height:1.25}
+.dia .h{text-align:center;color:var(--muted);font-size:13px;padding-bottom:2px}
+.dia .rl{display:flex;align-items:center;color:var(--muted);font-size:14px}
+.cell{min-height:52px;border-radius:10px;background:var(--empty);display:flex;gap:4px;overflow:hidden;border:2px solid transparent}
+.cell>div{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:4px;border-radius:8px;color:#fff}
+.cell>div.strip{flex:0 0 34%}
+.cell>div.blank{color:var(--muted)}
+.cell.tappable{cursor:pointer;border-color:var(--accent);border-style:dashed}
+.cell.hit-ok{border-color:var(--ok);border-style:solid} .cell.hit-bad{border-color:var(--bad);border-style:solid}
+.cell b{font-size:12.5px;overflow-wrap:anywhere;max-width:100%} .cell span{font-size:11.5px;opacity:.95;overflow-wrap:anywhere;max-width:100%}
+.dia-cap{color:var(--muted);font-size:13px;margin-top:8px}
+.hidden-dia{color:var(--muted);font-size:14px;text-align:center;padding:10px;border:1px dashed var(--line);border-radius:12px}
+.endline{direction:rtl;white-space:pre-wrap;background:var(--empty);border-radius:12px;padding:12px;font-size:15px}
+.note{color:var(--muted);font-size:14px}
+.offline{font-size:13px;color:var(--muted);text-align:center;margin-top:24px}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<script>window.UNITS = [];</script>
+<script src="units/b3.js"></script>
+<script>
+(function(){
+'use strict';
+var KEY = 'tutor-app-v1';
+var NERVES = {
+  axillary:{name:'axillary'}, radial:{name:'radial'}, musculocutaneous:{name:'musculocutaneous'},
+  median:{name:'median'}, ulnar:{name:'ulnar'}
+};
+function load(){ try{ return JSON.parse(localStorage.getItem(KEY)) || {}; }catch(e){ return {}; } }
+function save(s){ try{ localStorage.setItem(KEY, JSON.stringify(s)); }catch(e){} }
+var store = load();
+function us(id){ store[id] = store[id] || {step:0, answers:{}, done:false}; return store[id]; }
+
+var app = document.getElementById('app');
+function el(tag, attrs, kids){
+  var e = document.createElement(tag);
+  if(attrs) for(var k in attrs){
+    if(k==='class') e.className = attrs[k];
+    else if(k==='html') e.innerHTML = attrs[k];
+    else if(k.slice(0,2)==='on') e.addEventListener(k.slice(2), attrs[k]);
+    else e.setAttribute(k, attrs[k]);
+  }
+  (kids||[]).forEach(function(c){ if(c==null) return; e.appendChild(typeof c==='string'? document.createTextNode(c) : c); });
+  return e;
+}
+function paras(arr){ return (arr||[]).map(function(t){ return el('p',{html:t}); }); }
+function findUnit(id){ return window.UNITS.filter(function(u){ return u.id===id; })[0]; }
+
+/* ---------- home ---------- */
+function home(){
+  app.innerHTML = '';
+  app.appendChild(el('h1',null,['לומדים']));
+  app.appendChild(el('p',{class:'sub'},['יחידות של רבע שעה. ממשיכים מאיפה שעצרת, גם בלי קליטה.']));
+  var groups = {};
+  window.UNITS.forEach(function(u){ (groups[u.course] = groups[u.course]||[]).push(u); });
+  Object.keys(groups).forEach(function(c){
+    app.appendChild(el('h2',null,[c]));
+    groups[c].forEach(function(u){
+      var s = store[u.id], pill;
+      if(s && s.done) pill = el('span',{class:'pill done'},['הושלמה']);
+      else if(s && s.step>0) pill = el('span',{class:'pill mid'},['באמצע · '+(s.step+1)+'/'+u.steps.length]);
+      else pill = el('span',{class:'pill'},['חדשה']);
+      app.appendChild(el('button',{class:'unit-row',onclick:function(){ openUnit(u.id); }},[
+        el('div',null,[u.code+' · '+u.title, el('small',null,[u.blurb])]), pill ]));
+    });
+  });
+  app.appendChild(el('p',{class:'offline'},[navigator.onLine? 'מחוברת. הכול נשמר גם לשימוש בלי קליטה.' : 'בלי קליטה. הכול עובד.']));
+}
+
+/* ---------- diagram ---------- */
+function filledCells(u, upto){
+  var f = {};
+  for(var i=0;i<=upto && i<u.steps.length;i++){
+    var st = u.steps[i], a = us(u.id).answers[i];
+    if(st.fill && (i<upto || (a && a.answered))) for(var k in st.fill) f[k]=st.fill[k];
+  }
+  return f;
+}
+function cellPart(spec, strip){
+  if(!spec) return el('div',{class:'blank'+(strip?' strip':'')},['?']);
+  if(spec==='none') return el('div',{class:'blank'+(strip?' strip':'')},[strip?'':'—']);
+  if(spec.none) return el('div',{class:'blank'+(strip?' strip':'')},[el('span',null,[spec.m||'—'])]);
+  return el('div',{class:strip?'strip':'',style:'background:var(--n-'+spec.n+')'},[el('b',null,[spec.n]), spec.m? el('span',null,[spec.m]) : null]);
+}
+function diagram(u, idx, tapCfg){
+  var f = filledCells(u, idx);
+  var d = el('div',{class:'dia'});
+  d.appendChild(el('div')); d.appendChild(el('div',{class:'h'},['קדמי · מכופפים'])); d.appendChild(el('div',{class:'h'},['אחורי · מיישרים']));
+  u.diagram.rows.forEach(function(r){
+    d.appendChild(el('div',{class:'rl'},[r.label]));
+    r.cells.forEach(function(c){
+      var cell = el('div',{class:'cell','data-id':c.id});
+      cell.appendChild(cellPart(f[c.id]));
+      if(c.strip) cell.appendChild(cellPart(f[c.strip], true));
+      if(tapCfg){ cell.classList.add('tappable'); cell.addEventListener('click', function(){ tapCfg(c.id, cell); }); }
+      d.appendChild(cell);
+    });
+  });
+  var box = el('div',{class:'card'},[d, el('div',{class:'dia-cap'},[u.diagram.caption])]);
+  return box;
+}
+
+/* ---------- unit ---------- */
+function openUnit(id){ var s = us(id); if(s.done){ s.step = findUnit(id).steps.length; } render(id); }
+function render(id){
+  var u = findUnit(id), s = us(id);
+  app.innerHTML=''; window.scrollTo(0,0);
+  var top = el('div',{class:'top'},[
+    el('button',{class:'back',onclick:home},['→ כל היחידות']),
+    el('span',{class:'note'},[u.code])
+  ]);
+  app.appendChild(top);
+  var pct = Math.round(100*Math.min(s.step,u.steps.length)/u.steps.length);
+  app.appendChild(el('div',{class:'bar'},[el('i',{style:'width:'+pct+'%'})]));
+  if(s.step >= u.steps.length){ return renderEnd(u); }
+  var st = u.steps[s.step];
+  var a = s.answers[s.step] = s.answers[s.step] || {};
+  save(store);
+  if(st.hideDiagram) app.appendChild(el('div',{class:'hidden-dia'},['הציור מוסתר עכשיו, כדי שתשלפי מהזיכרון.']));
+  var tapHandler = null;
+  if(st.type==='tap' && !a.answered){
+    tapHandler = function(cid, cellEl){
+      a.answered = true; a.pick = cid; a.ok = (cid===st.answer); save(store); render(id);
+    };
+  }
+  if(!st.hideDiagram) app.appendChild(diagram(u, s.step, tapHandler));
+  var body = el('div',{class:'card'});
+  var tx = el('div',{class:'step-text'}, paras(st.text));
+  body.appendChild(tx);
+  if(st.q) body.appendChild(el('div',{class:'q',html:st.q}));
+  app.appendChild(body);
+
+  if(st.type==='choice') renderChoice(u, st, a, body);
+  else if(st.type==='tap') renderTap(u, st, a, body);
+  else if(st.type==='sort') renderSort(u, st, a, body);
+  else if(st.type==='recall') renderRecall(u, st, a, body);
+
+  if(a.answered && (st.type!=='recall' || a.grade)){
+    if(st.explain) body.appendChild(el('div',{class:'fb neutral'}, paras(st.explain)));
+    body.appendChild(el('button',{class:'primary',onclick:function(){ s.step++; if(s.step>=u.steps.length) s.done=true; save(store); render(id); }},[s.step+1>=u.steps.length? 'לסיום' : 'הלאה']));
+  }
+  app.appendChild(confusedBox(u, s.step, st, a));
+  if(s.step>0) app.appendChild(el('button',{class:'ghost',onclick:function(){ s.step--; save(store); render(id); }},['צעד אחורה']));
+}
+
+/* ---------- "didn't understand": one line to paste into a Claude chat (her choice 14.11) ---------- */
+function plain(h){ var d = document.createElement('div'); d.innerHTML = h || ''; return (d.textContent||'').replace(/\s+/g,' ').trim(); }
+function cellName(u, cid){
+  var name = cid;
+  u.diagram.rows.forEach(function(r){ r.cells.forEach(function(c, i){ if(c.id===cid) name = r.label+', '+(i===0?'צד קדמי':'צד אחורי'); }); });
+  return name;
+}
+function chosenText(u, st, a){
+  if(st.type==='choice' && a.pick!=null) return plain(st.options[a.pick].t);
+  if(st.type==='tap' && a.pick!=null) return 'המשבצת '+cellName(u, a.pick);
+  if(st.type==='sort' && a.picks){
+    var parts = []; st.items.forEach(function(it, i){ if(a.picks[i]!=null) parts.push(plain(it.t)+' ← '+a.picks[i]); });
+    if(parts.length) return parts.join('; ');
+  }
+  if(st.type==='recall' && (a.text||a.grade)){
+    var g = a.grade? ' (סימנתי שהיה לי: '+({all:'הכול',part:'חלק',none:'כמעט כלום'})[a.grade]+')' : '';
+    return (a.text? 'כתבתי "'+a.text.replace(/\s+/g,' ').trim()+'"' : 'לא כתבתי כלום')+g;
+  }
+  return '';
+}
+function confusedLine(u, idx, st, a){
+  var q = plain(st.q) || plain((st.text||[])[0]);
+  var ch = chosenText(u, st, a);
+  return 'לא הבנתי ביחידה '+u.code+' ('+u.title+'), צעד '+(idx+1)+' מתוך '+u.steps.length+
+    (st.tag? ', הנושא: '+st.tag : '')+'. השאלה: '+q+' '+
+    (ch? 'מה שבחרתי: '+ch+'.' : 'עוד לא עניתי.')+
+    ' תסביר לי את זה מצעד אחד יותר בסיסי, ובסוף תשאל אותי שאלה אחת כדי לבדוק שהבנתי.';
+}
+function copyLine(line, box, okMsg, shown){
+  box.innerHTML = '';
+  var msg = el('p',{class:'note'});
+  var pre = shown || el('div',{class:'endline'},[line]);
+  box.appendChild(msg); if(!shown) box.appendChild(pre);
+  function done(){ msg.textContent = okMsg; }
+  function manual(){
+    selectText(pre);
+    var ok = false; try{ ok = document.execCommand('copy'); }catch(e){}
+    msg.textContent = ok? okMsg : 'צריך להעתיק ידנית: השורה מסומנת, לוחצים עליה לחיצה ארוכה ובוחרים "העתק".';
+  }
+  if(navigator.clipboard && navigator.clipboard.writeText && window.isSecureContext) navigator.clipboard.writeText(line).then(done, manual);
+  else manual();
+}
+function confusedBox(u, idx, st, a){
+  var wrap = el('div');
+  var box = el('div');
+  wrap.appendChild(el('button',{class:'ghost',onclick:function(){
+    copyLine(confusedLine(u, idx, st, a), box, 'הועתק. פותחים שיחה עם Claude ומדביקים.');
+  }},['לא הבנתי']));
+  wrap.appendChild(box);
+  return wrap;
+}
+function renderChoice(u, st, a, body){
+  st.options.forEach(function(o, i){
+    var cls = 'opt';
+    if(a.answered){ if(o.ok) cls+=' ok'; else if(a.pick===i) cls+=' bad'; }
+    var b = el('button',{class:cls,html:o.t,onclick:function(){
+      if(a.answered) return; a.answered=true; a.pick=i; a.ok=!!o.ok; save(store); render(currentId);
+    }});
+    if(a.answered) b.disabled = true;
+    body.appendChild(b);
+  });
+  if(a.answered){
+    var o = st.options[a.pick];
+    body.appendChild(el('div',{class:'fb '+(o.ok?'ok':'bad')}, paras([(o.ok?'נכון. ':'לא בדיוק. ')+(o.why||'')])));
+  }
+}
+function renderTap(u, st, a, body){
+  if(!a.answered){ body.appendChild(el('p',{class:'note'},['הקישי על המשבצת בציור למעלה.'])); return; }
+  var cells = app.querySelectorAll('.cell');
+  cells.forEach(function(c){
+    if(c.getAttribute('data-id')===st.answer) c.classList.add('hit-ok');
+    else if(c.getAttribute('data-id')===a.pick) c.classList.add('hit-bad');
+  });
+  var msg = a.ok ? st.whyOk : (st.whyWrong[a.pick] || st.whyWrongDefault);
+  body.appendChild(el('div',{class:'fb '+(a.ok?'ok':'bad')}, paras([(a.ok?'נכון. ':'לא בדיוק. ')+msg])));
+}
+function renderSort(u, st, a, body){
+  a.picks = a.picks || {};
+  st.items.forEach(function(it, i){
+    var row = el('div',{class:'sort-item'},[el('div',{class:'t',html:it.t})]);
+    var chips = el('div',{class:'chips'});
+    st.choices.forEach(function(ch){
+      var cls='chip', p=a.picks[i];
+      if(p!=null){ if(ch===it.a) cls+=' ok'; else if(p===ch) cls+=' bad'; }
+      chips.appendChild(el('button',{class:cls,onclick:function(){
+        if(a.picks[i]!=null) return; a.picks[i]=ch;
+        a.answered = Object.keys(a.picks).length===st.items.length;
+        a.ok = a.answered && st.items.every(function(x,j){ return a.picks[j]===x.a; });
+        save(store); render(currentId);
+      }},[ch]));
+    });
+    row.appendChild(chips);
+    if(a.picks[i]!=null) row.appendChild(el('div',{class:'fb '+(a.picks[i]===it.a?'ok':'bad')}, paras([it.why])));
+    body.appendChild(row);
+  });
+}
+function renderRecall(u, st, a, body){
+  var ta = el('textarea',{placeholder:'כתבי כאן, במילים שלך'});
+  ta.value = a.text || '';
+  ta.addEventListener('input', function(){ a.text = ta.value; save(store); });
+  if(!a.revealed){
+    body.appendChild(ta);
+    body.appendChild(el('button',{class:'primary',onclick:function(){ a.text=ta.value; a.revealed=true; save(store); render(currentId); }},['לראות את התשובה']));
+    return;
+  }
+  if(a.text) body.appendChild(el('div',{class:'fb neutral'},[el('p',null,['מה שכתבת:']), el('p',null,[a.text])]));
+  body.appendChild(el('div',{class:'fb ok'}, paras(st.model)));
+  if(!a.grade){
+    body.appendChild(el('p',{class:'q'},['כמה מזה היה לך בלי להציץ?']));
+    [['all','הכול'],['part','חלק'],['none','כמעט כלום']].forEach(function(g){
+      body.appendChild(el('button',{class:'opt',onclick:function(){ a.grade=g[0]; a.answered=true; save(store); render(currentId); }},[g[1]]));
+    });
+  } else {
+    body.appendChild(el('p',{class:'note'},['סימנת: '+({all:'הכול',part:'חלק',none:'כמעט כלום'})[a.grade]]));
+  }
+}
+function renderEnd(u){
+  var s = us(u.id), missed = [], recall = '';
+  u.steps.forEach(function(st, i){
+    var a = s.answers[i]||{};
+    if(st.type==='recall'){ recall = ({all:'הכול',part:'חלק',none:'כמעט כלום'})[a.grade]||'לא נעשתה'; return; }
+    if(st.type==='sort'){ st.items.forEach(function(it,j){ if(a.picks && a.picks[j]!=null && a.picks[j]!==it.a) missed.push(it.tag); }); return; }
+    if(a.answered && !a.ok && st.tag) missed.push(st.tag);
+  });
+  var line = u.code+' הושלמה ('+u.title+'). שליפה בסוף: '+recall+'. '+(missed.length? 'נפל בניסיון ראשון: '+missed.join('; ')+'.' : 'הכול נכון בניסיון ראשון.');
+  var c = el('div',{class:'card'},[el('h2',null,['סוף היחידה'])].concat(paras(u.end)));
+  c.appendChild(el('p',{class:'q'},['שורה להדבקה בשיחה עם Claude, כדי שהחזרות יירשמו:']));
+  var pre = el('div',{class:'endline'},[line]);
+  c.appendChild(pre);
+  var endBox = el('div');
+  c.appendChild(el('button',{class:'primary',onclick:function(){ copyLine(line, endBox, 'הועתק.', pre); }},['להעתיק את השורה']));
+  c.appendChild(endBox);
+  c.appendChild(el('button',{class:'ghost',onclick:function(){ if(confirm('להתחיל את היחידה מחדש? התשובות שלך יימחקו.')){ store[u.id]={step:0,answers:{},done:false}; save(store); render(u.id);} }},['להתחיל מחדש']));
+  c.appendChild(el('button',{class:'ghost',onclick:home},['לכל היחידות']));
+  app.appendChild(c);
+}
+function selectText(node){ var r=document.createRange(); r.selectNodeContents(node); var s=window.getSelection(); s.removeAllRanges(); s.addRange(r); }
+
+var currentId = null;
+var _render = render; render = function(id){ currentId = id; _render(id); };
+home();
+if('serviceWorker' in navigator){ window.addEventListener('load', function(){ navigator.serviceWorker.register('sw.js').catch(function(){}); }); }
+})();
+</script>
+</body>
+</html>
